@@ -1,35 +1,53 @@
 package v1
 
-import "net/http"
+import (
+	"net/http"
+	"prometheus_lite/pkg/a_util/httputil"
+	promql "prometheus_lite/pkg/b_promql"
+	storage "prometheus_lite/pkg/c_storage"
+	"time"
+)
 
 type API struct {
+	Queryable   storage.SampleAndChunkQueryable
 	QueryEngine QueryEngine
+}
+
+func NewAPI(qe QueryEngine, q storage.SampleAndChunkQueryable) *API {
+	qe = promql.NewEngine(nil)
+	return &API{
+		Queryable:   q,
+		QueryEngine: qe,
+	}
 }
 
 func (api *API) queryRange(r *http.Request) (result apiFuncResult) {
 
+	// 1. Args
+	ctx := r.Context()
+	start, _ := parseTime(r.FormValue("start"))
+	end, _ := parseTime(r.FormValue("end"))
+	step, _ := parseDuration(r.FormValue("step"))
+	opts := promql.NewPrometheusQueryOpts(r.FormValue("stats") == "all", time.Duration(10))
+
+	// 2. Create Logical Plan
 	qry, _ := api.QueryEngine.NewRangeQuery(ctx, api.Queryable, opts, r.FormValue("query"), start, end, step)
 	defer func() {
 		if result.finalizer == nil {
 			qry.Close()
 		}
 	}()
+
+	// 3. Execute Logical Plan
 	ctx = httputil.ContextFromRequest(ctx, r)
 	res := qry.Exec(ctx)
 	if res.Err != nil {
-		return apiFuncResult{nil, returnAPIError(res.Err), res.Warnings, qry.Close}
+		return apiFuncResult{nil, nil, qry.Close}
 	}
 
-	// Optional stats field in response if parameter "stats" is not empty.
-	sr := api.statsRenderer
-	if sr == nil {
-		sr = defaultStatsRenderer
-	}
-	qs := sr(ctx, qry.Stats(), r.FormValue("stats"))
-
+	// 4. Return Result
 	return apiFuncResult{&QueryData{
 		ResultType: res.Value.Type(),
 		Result:     res.Value,
-		Stats:      qs,
-	}, nil, res.Warnings, qry.Close}
+	}, nil, qry.Close}
 }

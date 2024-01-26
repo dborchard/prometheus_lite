@@ -3,13 +3,20 @@ package v1
 import (
 	"context"
 	promql "prometheus_lite/pkg/b_promql"
+	"prometheus_lite/pkg/b_promql/parser"
+	storage "prometheus_lite/pkg/c_storage"
 	"time"
 )
 
 type apiFuncResult struct {
-	data      interface{}
+	data      *QueryData
 	err       *apiError
 	finalizer func()
+}
+
+type QueryData struct {
+	ResultType parser.ValueType `json:"resultType"`
+	Result     parser.Value     `json:"result"`
 }
 
 type apiError struct {
