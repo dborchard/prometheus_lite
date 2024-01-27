@@ -43,7 +43,27 @@ func (ng *Engine) NewRangeQuery(ctx context.Context, q storage.Queryable, opts Q
 }
 
 func (ng *Engine) exec(ctx context.Context, q *query) (v parser.Value, err error) {
+	finishQueue, err := ng.queueActive(ctx, q)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer finishQueue()
+
+	defer q.cancel()
+	switch s := q.Statement().(type) {
+	case *parser.EvalStmt:
+		return ng.execEvalStmt(ctx, q, s)
+	}
+
 	return nil, nil
+}
+
+func (ng *Engine) execEvalStmt(ctx context.Context, query *query, s *parser.EvalStmt) (parser.Value, error) {
+
+	mint, maxt := FindMinMaxTime(s)
+	// Good
+	querier, err := query.queryable.Querier(mint, maxt)
+
 }
 
 func (ng *Engine) queueActive(ctx context.Context, q *query) (func(), error) {
