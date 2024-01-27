@@ -12,6 +12,7 @@ const (
 	ValueTypeString ValueType = "string"
 )
 
+// Value is a generic interface for values resulting from a query evaluation.
 type Value interface {
 	Type() ValueType
 	String() string
