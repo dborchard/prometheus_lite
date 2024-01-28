@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"prometheus_lite/pkg/a_model/labels"
 	"prometheus_lite/pkg/b_promql/parser/posrange"
 	storage "prometheus_lite/pkg/c_storage"
+	"prometheus_lite/pkg/z_model/labels"
 	"time"
 )
 

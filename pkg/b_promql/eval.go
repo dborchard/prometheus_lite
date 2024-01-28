@@ -3,9 +3,9 @@ package promql
 import (
 	"context"
 	"fmt"
-	"prometheus_lite/pkg/a_model/histogram"
-	"prometheus_lite/pkg/a_model/labels"
 	"prometheus_lite/pkg/b_promql/parser"
+	"prometheus_lite/pkg/z_model/histogram"
+	"prometheus_lite/pkg/z_model/labels"
 	"slices"
 )
 

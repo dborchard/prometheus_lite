@@ -1,10 +1,12 @@
-package d_tsdb
+package tsdb
 
 import (
 	"context"
 	"errors"
-	"prometheus_lite/pkg/a_model/labels"
+	"github.com/oklog/ulid"
 	storage "prometheus_lite/pkg/c_storage"
+	"prometheus_lite/pkg/d_tsdb/tombstones"
+	"prometheus_lite/pkg/z_model/labels"
 )
 
 type blockQuerier struct {
@@ -22,15 +24,27 @@ type blockBaseQuerier struct {
 	mint, maxt int64
 }
 
+func newBlockBaseQuerier(b BlockReader, mint, maxt int64) (*blockBaseQuerier, error) {
+	indexr, _ := b.Index()
+	chunkr, _ := b.Chunks()
+	tombsr, _ := b.Tombstones()
+
+	return &blockBaseQuerier{
+		blockID:    b.Meta().ULID,
+		mint:       mint,
+		maxt:       maxt,
+		index:      indexr,
+		chunks:     chunkr,
+		tombstones: tombsr,
+	}, nil
+}
+
 func (q *blockQuerier) Select(ctx context.Context, sortSeries bool, hints *storage.SelectHints, ms ...*labels.Matcher) storage.SeriesSet {
 	mint := q.mint
 	maxt := q.maxt
 	disableTrimming := false
 
-	p, err := PostingsForMatchers(ctx, q.index, ms...)
-	if err != nil {
-		return storage.ErrSeriesSet(err)
-	}
+	p, _ := PostingsForMatchers(ctx, q.index, ms...)
 	if sortSeries {
 		p = q.index.SortedPostings(p)
 	}
@@ -61,12 +75,5 @@ func (q *blockBaseQuerier) Close() error {
 	if q.closed {
 		return errors.New("block querier already closed")
 	}
-
-	errs := tsdb_errors.NewMulti(
-		q.index.Close(),
-		q.chunks.Close(),
-		q.tombstones.Close(),
-	)
-	q.closed = true
-	return errs.Err()
+	return nil
 }

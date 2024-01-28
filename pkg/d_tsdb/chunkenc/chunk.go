@@ -1,6 +1,6 @@
 package chunkenc
 
-import "prometheus_lite/pkg/a_model/histogram"
+import "prometheus_lite/pkg/z_model/histogram"
 
 // ValueType defines the type of a value an Iterator points to.
 type ValueType uint8
