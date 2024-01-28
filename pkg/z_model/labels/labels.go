@@ -1,5 +1,10 @@
 package labels
 
+import (
+	"slices"
+	"strings"
+)
+
 const (
 	MetricName   = "__name__"
 	AlertName    = "alertname"
@@ -61,6 +66,23 @@ func (b *Builder) Reset(base Labels) {
 	})
 }
 
+// Set the name/value pair as a label. A value of "" means delete that label.
+func (b *Builder) Set(n, v string) *Builder {
+	if v == "" {
+		// Empty labels are the same as missing labels.
+		return b.Del(n)
+	}
+	for i, a := range b.add {
+		if a.Name == n {
+			b.add[i].Value = v
+			return b
+		}
+	}
+	b.add = append(b.add, Label{Name: n, Value: v})
+
+	return b
+}
+
 // Del deletes the label of the given name.
 func (b *Builder) Del(ns ...string) *Builder {
 	for _, n := range ns {
@@ -81,4 +103,28 @@ func (b *Builder) Labels() Labels {
 // EmptyLabels returns n empty Labels value, for convenience.
 func EmptyLabels() Labels {
 	return Labels{}
+}
+
+// New returns a sorted Labels from the given labels.
+// The caller has to guarantee that all label names are unique.
+func New(ls ...Label) Labels {
+	set := make(Labels, 0, len(ls))
+	set = append(set, ls...)
+	slices.SortFunc(set, func(a, b Label) int { return strings.Compare(a.Name, b.Name) })
+
+	return set
+}
+
+// FromStrings creates new labels from pairs of strings.
+func FromStrings(ss ...string) Labels {
+	if len(ss)%2 != 0 {
+		panic("invalid number of strings")
+	}
+	res := make(Labels, 0, len(ss)/2)
+	for i := 0; i < len(ss); i += 2 {
+		res = append(res, Label{Name: ss[i], Value: ss[i+1]})
+	}
+
+	slices.SortFunc(res, func(a, b Label) int { return strings.Compare(a.Name, b.Name) })
+	return res
 }

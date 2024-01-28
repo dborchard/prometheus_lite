@@ -1,6 +1,6 @@
 package tombstones
 
-import storage "prometheus_lite/pkg/c_storage"
+import storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
 
 // Reader gives access to tombstone intervals by series reference.
 type Reader interface {

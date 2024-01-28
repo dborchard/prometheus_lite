@@ -2,8 +2,8 @@ package storage
 
 import (
 	"context"
-	"prometheus_lite/pkg/d_tsdb/chunkenc"
-	"prometheus_lite/pkg/z_model/labels"
+	"github.com/dborchard/prometheus_lite/pkg/d_tsdb/chunkenc"
+	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
 )
 
 // Querier provides querying access over time series data of a fixed time range.

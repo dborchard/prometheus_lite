@@ -2,7 +2,7 @@ package storage
 
 import (
 	"context"
-	"prometheus_lite/pkg/z_model/labels"
+	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
 )
 
 type mergeGenericQuerier struct {

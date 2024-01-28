@@ -2,9 +2,9 @@ package v1
 
 import (
 	"context"
-	promql "prometheus_lite/pkg/b_promql"
-	"prometheus_lite/pkg/b_promql/parser"
-	storage "prometheus_lite/pkg/c_storage"
+	promql "github.com/dborchard/prometheus_lite/pkg/b_promql"
+	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
+	storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
 	"time"
 )
 

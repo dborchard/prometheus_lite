@@ -2,8 +2,8 @@ package promql
 
 import (
 	"context"
-	"prometheus_lite/pkg/b_promql/parser"
-	storage "prometheus_lite/pkg/c_storage"
+	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
+	storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
 )
 
 // A Query is derived from an a raw query string and can be run against an engine

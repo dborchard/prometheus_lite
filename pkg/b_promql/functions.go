@@ -1,9 +1,9 @@
 package promql
 
 import (
+	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
+	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
 	"math"
-	"prometheus_lite/pkg/b_promql/parser"
-	"prometheus_lite/pkg/z_model/labels"
 	"regexp"
 )
 

@@ -2,7 +2,7 @@ package tsdb
 
 import (
 	"context"
-	"prometheus_lite/pkg/z_model/labels"
+	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
 )
 
 // IndexReader provides reading access of serialized index data.

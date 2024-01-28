@@ -1,6 +1,6 @@
 package parser
 
-import "prometheus_lite/pkg/b_promql/parser/posrange"
+import "github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
 
 // UnaryExpr represents a unary operation on another expression.
 // Currently unary operations are only supported for Scalars.

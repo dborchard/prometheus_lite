@@ -2,9 +2,9 @@ package promql
 
 import (
 	"fmt"
-	"prometheus_lite/pkg/b_promql/parser"
-	"prometheus_lite/pkg/z_model/histogram"
-	"prometheus_lite/pkg/z_model/labels"
+	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
+	"github.com/dborchard/prometheus_lite/pkg/z_model/histogram"
+	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
 	"strconv"
 	"strings"
 )

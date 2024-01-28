@@ -1,7 +1,7 @@
 package promql
 
 import (
-	"prometheus_lite/pkg/b_promql/parser"
+	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
 	"time"
 )
 

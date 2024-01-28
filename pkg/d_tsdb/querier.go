@@ -3,10 +3,10 @@ package tsdb
 import (
 	"context"
 	"errors"
+	storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
+	"github.com/dborchard/prometheus_lite/pkg/d_tsdb/tombstones"
+	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
 	"github.com/oklog/ulid"
-	storage "prometheus_lite/pkg/c_storage"
-	"prometheus_lite/pkg/d_tsdb/tombstones"
-	"prometheus_lite/pkg/z_model/labels"
 )
 
 type blockQuerier struct {

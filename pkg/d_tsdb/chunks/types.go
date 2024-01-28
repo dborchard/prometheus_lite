@@ -1,6 +1,6 @@
 package chunks
 
-import "prometheus_lite/pkg/d_tsdb/chunkenc"
+import "github.com/dborchard/prometheus_lite/pkg/d_tsdb/chunkenc"
 
 // Iterator iterates over the chunks of a single time series.
 type Iterator interface {

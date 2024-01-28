@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"prometheus_lite/pkg/b_promql/parser/posrange"
+	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
 	"time"
 )
 

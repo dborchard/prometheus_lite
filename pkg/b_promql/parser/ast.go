@@ -1,6 +1,8 @@
 package parser
 
-import "prometheus_lite/pkg/b_promql/parser/posrange"
+import (
+	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
+)
 
 type Node interface {
 	// String representation of the node that returns the given node when parsed
@@ -18,3 +20,5 @@ type Node interface {
 
 var _ Node = (*EvalStmt)(nil)
 var _ Node = (*Expressions)(nil)
+
+type ItemType int

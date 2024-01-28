@@ -1,7 +1,5 @@
 package parser
 
-type ItemType int
-
 // Expr is a generic interface for all expression types.
 type Expr interface {
 	Node

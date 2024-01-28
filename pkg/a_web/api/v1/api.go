@@ -1,10 +1,10 @@
 package v1
 
 import (
+	promql "github.com/dborchard/prometheus_lite/pkg/b_promql"
+	storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
+	"github.com/dborchard/prometheus_lite/pkg/z_util/httputil"
 	"net/http"
-	promql "prometheus_lite/pkg/b_promql"
-	storage "prometheus_lite/pkg/c_storage"
-	"prometheus_lite/pkg/z_util/httputil"
 	"time"
 )
 

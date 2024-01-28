@@ -2,8 +2,8 @@ package httputil
 
 import (
 	"context"
+	promql "github.com/dborchard/prometheus_lite/pkg/b_promql"
 	"net/http"
-	promql "prometheus_lite/pkg/b_promql"
 )
 
 func ContextFromRequest(ctx context.Context, r *http.Request) context.Context {

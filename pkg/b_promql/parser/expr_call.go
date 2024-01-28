@@ -1,6 +1,6 @@
 package parser
 
-import "prometheus_lite/pkg/b_promql/parser/posrange"
+import "github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
 
 // Call represents a function call.
 type Call struct {
@@ -33,14 +33,4 @@ func (c *Call) Type() ValueType {
 func (c *Call) PromQLExpr() {
 	//TODO implement me
 	panic("implement me")
-}
-
-// Function represents a function of the expression language and is
-// used by function nodes.
-type Function struct {
-	Name         string
-	ArgTypes     []ValueType
-	Variadic     int
-	ReturnType   ValueType
-	Experimental bool
 }

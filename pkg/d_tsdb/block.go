@@ -1,6 +1,6 @@
 package tsdb
 
-import "prometheus_lite/pkg/d_tsdb/tombstones"
+import "github.com/dborchard/prometheus_lite/pkg/d_tsdb/tombstones"
 
 // BlockReader provides reading access to a data block.
 type BlockReader interface {
