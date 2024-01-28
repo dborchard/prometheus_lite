@@ -44,6 +44,3 @@ type Function struct {
 	ReturnType   ValueType
 	Experimental bool
 }
-
-// Expressions is a list of expression nodes that implements Node.
-type Expressions []Expr

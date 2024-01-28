@@ -1,6 +1,9 @@
 package storage
 
-import "context"
+import (
+	"context"
+	"prometheus_lite/pkg/a_model/labels"
+)
 
 // A Queryable handles queries against a storage.
 // Use it when you need to have access to all samples without chunk encoding abstraction e.g promQL.

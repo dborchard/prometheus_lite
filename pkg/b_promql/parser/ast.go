@@ -15,3 +15,6 @@ type Node interface {
 	// PositionRange returns the position of the AST Node in the query string.
 	PositionRange() posrange.PositionRange
 }
+
+var _ Node = (*EvalStmt)(nil)
+var _ Node = (*Expressions)(nil)

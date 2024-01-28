@@ -13,6 +13,7 @@
 
 // posrange is used to report a position in query strings for error
 // and warning messages.
+
 package posrange
 
 import "fmt"

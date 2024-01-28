@@ -22,3 +22,6 @@ var _ Expr = (*BinaryExpr)(nil)
 
 var _ Expr = (*Call)(nil)
 var _ Expr = (*AggregateExpr)(nil)
+
+var _ Expr = (*MatrixSelector)(nil)
+var _ Expr = (*VectorSelector)(nil)
