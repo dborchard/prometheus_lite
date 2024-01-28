@@ -1,12 +1,17 @@
 package parser
 
-// Expr is a generic interface for all expression types.
-type Expr interface {
-	Node
+import "prometheus_lite/pkg/b_promql/parser/posrange"
 
-	// Type returns the type the expression evaluates to. It does not perform
-	// in-depth checks as this is done at parsing-time.
-	Type() ValueType
-	// PromQLExpr ensures that no other types accidentally implement the interface.
-	PromQLExpr()
+type Node interface {
+	// String representation of the node that returns the given node when parsed
+	// as part of a valid query.
+	String() string
+
+	// Pretty returns the prettified representation of the node.
+	// It uses the level information to determine at which level/depth the current
+	// node is in the AST and uses this to apply indentation.
+	Pretty(level int) string
+
+	// PositionRange returns the position of the AST Node in the query string.
+	PositionRange() posrange.PositionRange
 }
