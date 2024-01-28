@@ -1,6 +1,11 @@
 package d_tsdb
 
-import "context"
+import (
+	"context"
+	"errors"
+	"prometheus_lite/pkg/a_model/labels"
+	storage "prometheus_lite/pkg/c_storage"
+)
 
 type blockQuerier struct {
 	*blockBaseQuerier
@@ -41,4 +46,27 @@ func (q *blockQuerier) Select(ctx context.Context, sortSeries bool, hints *stora
 	}
 
 	return newBlockSeriesSet(q.index, q.chunks, q.tombstones, p, mint, maxt, disableTrimming)
+}
+func (q *blockBaseQuerier) LabelValues(ctx context.Context, name string, matchers ...*labels.Matcher) ([]string, error) {
+	res, err := q.index.SortedLabelValues(ctx, name, matchers...)
+	return res, err
+}
+
+func (q *blockBaseQuerier) LabelNames(ctx context.Context, matchers ...*labels.Matcher) ([]string, error) {
+	res, err := q.index.LabelNames(ctx, matchers...)
+	return res, err
+}
+
+func (q *blockBaseQuerier) Close() error {
+	if q.closed {
+		return errors.New("block querier already closed")
+	}
+
+	errs := tsdb_errors.NewMulti(
+		q.index.Close(),
+		q.chunks.Close(),
+		q.tombstones.Close(),
+	)
+	q.closed = true
+	return errs.Err()
 }
