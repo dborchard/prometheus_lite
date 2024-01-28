@@ -9,8 +9,8 @@ import (
 )
 
 type API struct {
-	Queryable   storage.SampleAndChunkQueryable
 	QueryEngine QueryEngine
+	Queryable   storage.SampleAndChunkQueryable
 }
 
 func NewAPI(qe QueryEngine, q storage.SampleAndChunkQueryable) *API {
