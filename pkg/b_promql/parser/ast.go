@@ -18,7 +18,5 @@ type Node interface {
 	PositionRange() posrange.PositionRange
 }
 
-var _ Node = (*EvalStmt)(nil)
 var _ Node = (*Expressions)(nil)
-
-type ItemType int
+var _ Node = (*EvalStmt)(nil)

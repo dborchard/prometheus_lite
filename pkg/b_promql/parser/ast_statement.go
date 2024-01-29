@@ -13,6 +13,7 @@ type Statement interface {
 	PromQLStmt()
 }
 
+// EvalStmt is like  OutPlan
 type EvalStmt struct {
 	Expr Expr // Expression to be evaluated.
 

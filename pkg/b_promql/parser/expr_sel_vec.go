@@ -28,27 +28,24 @@ type VectorSelector struct {
 	PosRange posrange.PositionRange
 }
 
-func (v *VectorSelector) String() string {
+func (e *VectorSelector) String() string {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (v *VectorSelector) Pretty(level int) string {
+func (e *VectorSelector) Pretty(level int) string {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (v *VectorSelector) PositionRange() posrange.PositionRange {
+func (e *VectorSelector) PositionRange() posrange.PositionRange {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (v *VectorSelector) Type() ValueType {
-	//TODO implement me
-	panic("implement me")
-}
+func (e *VectorSelector) Type() ValueType { return ValueTypeVector }
 
-func (v *VectorSelector) PromQLExpr() {
+func (e *VectorSelector) PromQLExpr() {
 	//TODO implement me
 	panic("implement me")
 }

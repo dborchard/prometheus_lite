@@ -212,13 +212,8 @@ func unwrapStepInvariantExpr(e parser.Expr) parser.Expr {
 	return e
 }
 
-type seriesAndTimestamp struct {
-	Series
-	ts int64
-}
-
 func (ev *evaluator) rangeEval(prepSeries func(labels.Labels, *EvalSeriesHelper), funcCall func([]parser.Value, [][]EvalSeriesHelper, *EvalNodeHelper) Vector, exprs ...parser.Expr) Matrix {
-	numSteps := int((ev.endTimestamp-ev.startTimestamp)/ev.interval) + 1
+	numSteps := 1
 
 	matrixes := make([]Matrix, len(exprs))
 	origMatrixes := make([]Matrix, len(exprs))
@@ -248,8 +243,12 @@ func (ev *evaluator) rangeEval(prepSeries func(labels.Labels, *EvalSeriesHelper)
 			biggestLen = len(matrixes[i])
 		}
 	}
-	enh := &EvalNodeHelper{Out: make(Vector, 0, biggestLen)}
 
+	enh := &EvalNodeHelper{Out: make(Vector, 0, biggestLen)}
+	type seriesAndTimestamp struct {
+		Series
+		ts int64
+	}
 	seriess := make(map[uint64]seriesAndTimestamp, biggestLen) // Output series by series hash.
 	var (
 		seriesHelpers [][]EvalSeriesHelper
@@ -258,6 +257,10 @@ func (ev *evaluator) rangeEval(prepSeries func(labels.Labels, *EvalSeriesHelper)
 
 	// If the series preparation function is provided, we should run it for
 	// every single series in the matrix.
+	//if prepSeries != nil {
+	seriesHelpers = make([][]EvalSeriesHelper, len(exprs))
+	bufHelpers = make([][]EvalSeriesHelper, len(exprs))
+
 	if prepSeries != nil {
 		seriesHelpers = make([][]EvalSeriesHelper, len(exprs))
 		bufHelpers = make([][]EvalSeriesHelper, len(exprs))
@@ -272,16 +275,35 @@ func (ev *evaluator) rangeEval(prepSeries func(labels.Labels, *EvalSeriesHelper)
 		}
 	}
 
-	for i := range exprs {
-		seriesHelpers[i] = make([]EvalSeriesHelper, len(matrixes[i]))
-		bufHelpers[i] = make([]EvalSeriesHelper, len(matrixes[i]))
-
-		for si, series := range matrixes[i] {
-			prepSeries(series.Metric, &seriesHelpers[i][si])
-		}
-	}
-
 	for ts := ev.startTimestamp; ts <= ev.endTimestamp; ts += ev.interval {
+
+		for i := range exprs {
+			vectors[i] = vectors[i][:0]
+
+			if prepSeries != nil {
+				bufHelpers[i] = bufHelpers[i][:0]
+			}
+
+			for si, series := range matrixes[i] {
+				switch {
+				case len(series.Floats) > 0 && series.Floats[0].T == ts:
+					vectors[i] = append(vectors[i], Sample{Metric: series.Metric, F: series.Floats[0].F, T: ts})
+					// Move input vectors forward so we don't have to re-scan the same
+					// past points at the next step.
+					matrixes[i][si].Floats = series.Floats[1:]
+				case len(series.Histograms) > 0 && series.Histograms[0].T == ts:
+					vectors[i] = append(vectors[i], Sample{Metric: series.Metric, H: series.Histograms[0].H, T: ts})
+					matrixes[i][si].Histograms = series.Histograms[1:]
+				default:
+					continue
+				}
+				if prepSeries != nil {
+					bufHelpers[i] = append(bufHelpers[i], seriesHelpers[i][si])
+				}
+			}
+
+			args[i] = vectors[i]
+		}
 		// Make the function call.
 		enh.Ts = ts
 		result := funcCall(args, bufHelpers, enh)
@@ -292,9 +314,9 @@ func (ev *evaluator) rangeEval(prepSeries func(labels.Labels, *EvalSeriesHelper)
 			h := sample.Metric.Hash()
 			ss, ok := seriess[h]
 			if ok {
-				if ss.ts == ts { // If we've seen this output series before at this timestamp, it's a duplicate.
-					panic("vector cannot contain metrics with the same labelset")
-				}
+				//if ss.ts == ts { // If we've seen this output series before at this timestamp, it's a duplicate.
+				//	panic("vector cannot contain metrics with the same labelset")
+				//}
 				ss.ts = ts
 			} else {
 				ss = seriesAndTimestamp{Series{Metric: sample.Metric}, ts}
@@ -376,6 +398,8 @@ func scalarBinop(op parser.ItemType, lhs, rhs float64) float64 {
 	switch op {
 	case parser.ADD:
 		return lhs + rhs
+	case parser.DIV:
+		return lhs / rhs
 	}
 	panic(fmt.Errorf("operator %q not allowed for Scalar operations", op))
 }

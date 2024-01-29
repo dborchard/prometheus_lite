@@ -180,3 +180,18 @@ func (h *FloatHistogram) String() string {
 	sb.WriteRune('}')
 	return sb.String()
 }
+
+// Div works like Mul but divides instead of multiplies.
+// When dividing by 0, everything will be set to Inf.
+func (h *FloatHistogram) Div(scalar float64) *FloatHistogram {
+	h.ZeroCount /= scalar
+	h.Count /= scalar
+	h.Sum /= scalar
+	for i := range h.PositiveBuckets {
+		h.PositiveBuckets[i] /= scalar
+	}
+	for i := range h.NegativeBuckets {
+		h.NegativeBuckets[i] /= scalar
+	}
+	return h
+}

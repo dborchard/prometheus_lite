@@ -68,12 +68,33 @@ func (ng *Engine) execEvalStmt(ctx context.Context, query *query, s *parser.Eval
 	mint, maxt := FindMinMaxTime(s)
 
 	querier, _ := query.queryable.Querier(mint, maxt)
-	defer querier.Close()
+	//defer querier.Close()
 
 	ng.populateSeries(ctxPrepare, querier, s)
 
 	if s.Start == s.End && s.Interval == 0 {
-		panic("instant query not implemented")
+		s.Start = s.Start.Add(time.Second * 1)
+		s.End = s.End.Add(time.Second * 1)
+		s.Interval = 1
+		// range query
+		// Range evaluation.
+		evaluator := &evaluator{
+			startTimestamp: timeMilliseconds(s.Start),
+			endTimestamp:   timeMilliseconds(s.Start), // main change
+			interval:       1,
+			ctx:            ctxPrepare,
+		}
+		val, _ := evaluator.Eval(s.Expr)
+
+		mat, ok := val.(Matrix)
+		if !ok {
+			panic(fmt.Errorf("promql.Engine.exec: invalid expression type %q", val.Type()))
+		}
+		query.matrix = mat
+
+		sort.Sort(mat)
+
+		return mat, nil
 	} else {
 		// range query
 		// Range evaluation.
@@ -152,9 +173,12 @@ func (ng *Engine) newQuery(q storage.Queryable, qs string, opts QueryOpts, start
 		Interval: interval,
 	}
 	qry := &query{
-		q:         qs,
-		stmt:      es,
-		ng:        ng,
+		q:    qs,
+		stmt: es,
+		ng:   ng,
+		cancel: func() {
+
+		},
 		queryable: q,
 	}
 	return &es.Expr, qry
@@ -217,6 +241,15 @@ func preprocessExprHelper(expr parser.Expr, start, end time.Time) bool {
 
 	case *parser.StringLiteral, *parser.NumberLiteral:
 		return true
+	case *parser.VectorSelector:
+		switch n.StartOrEnd {
+		//case parser.START:
+		//	n.Timestamp = makeInt64Pointer(timestamp.FromTime(start))
+		//case parser.END:
+		//	n.Timestamp = makeInt64Pointer(timestamp.FromTime(end))
+		}
+		return n.Timestamp != nil
+
 	}
 
 	panic(fmt.Sprintf("found unexpected node %#v", expr))

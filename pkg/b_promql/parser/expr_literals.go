@@ -22,27 +22,24 @@ type StepInvariantExpr struct {
 	Expr Expr
 }
 
-func (n *NumberLiteral) String() string {
+func (e *NumberLiteral) String() string {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (n *NumberLiteral) Pretty(level int) string {
+func (e *NumberLiteral) Pretty(level int) string {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (n *NumberLiteral) PositionRange() posrange.PositionRange {
+func (e *NumberLiteral) PositionRange() posrange.PositionRange {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (n *NumberLiteral) Type() ValueType {
-	//TODO implement me
-	panic("implement me")
-}
+func (e *NumberLiteral) Type() ValueType { return ValueTypeScalar }
 
-func (n *NumberLiteral) PromQLExpr() {
+func (e *NumberLiteral) PromQLExpr() {
 	//TODO implement me
 	panic("implement me")
 }

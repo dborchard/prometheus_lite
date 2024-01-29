@@ -14,10 +14,9 @@ type API struct {
 }
 
 func NewAPI(qe QueryEngine, q storage.SampleAndChunkQueryable) *API {
-	qe = promql.NewEngine(nil)
 	return &API{
-		Queryable:   q,
 		QueryEngine: qe,
+		Queryable:   q,
 	}
 }
 

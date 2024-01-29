@@ -21,10 +21,7 @@ type Result struct {
 
 type Matrix []Series
 
-func (m Matrix) Len() int {
-	//TODO implement me
-	panic("implement me")
-}
+func (m Matrix) Len() int { return len(m) }
 
 func (m Matrix) Less(i, j int) bool {
 	//TODO implement me
@@ -109,8 +106,14 @@ func (s String) String() string {
 }
 
 func (m Matrix) String() string {
-	//TODO implement me
-	panic("implement me")
+	// TODO(fabxc): sort, or can we rely on order from the querier?
+	strs := make([]string, len(m))
+
+	for i, ss := range m {
+		strs[i] = ss.String()
+	}
+
+	return strings.Join(strs, "\n")
 }
 
 func (v Vector) String() string {
