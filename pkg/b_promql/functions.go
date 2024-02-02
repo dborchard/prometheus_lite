@@ -2,10 +2,11 @@ package promql
 
 import (
 	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
-	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
+	"github.com/dborchard/prometheus_lite/pkg/y_model/labels"
 	"math"
-	"regexp"
 )
+
+type FunctionCall func(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper) Vector
 
 // FunctionCalls is a list of all functions supported by PromQL, including their types.
 var FunctionCalls = map[string]FunctionCall{
@@ -43,33 +44,7 @@ func (enh *EvalNodeHelper) DropMetricName(l labels.Labels) labels.Labels {
 	enh.Dmn[h] = ret
 	return ret
 }
+
 func dropMetricName(l labels.Labels) labels.Labels {
 	return labels.NewBuilder(l).Del(labels.MetricName).Labels()
-}
-
-type FunctionCall func(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper) Vector
-
-// EvalNodeHelper stores extra information and caches for evaluating a single node across steps.
-type EvalNodeHelper struct {
-	// Evaluation timestamp.
-	Ts int64
-	// Vector that can be used for output.
-	Out Vector
-
-	// Caches.
-	// DropMetricName and label_*.
-	Dmn map[uint64]labels.Labels
-	// funcHistogramQuantile for classic histograms.
-	//signatureToMetricWithBuckets map[string]*metricWithBuckets
-	// label_replace.
-	regex *regexp.Regexp
-
-	lb           *labels.Builder
-	lblBuf       []byte
-	lblResultBuf []byte
-
-	// For binary vector matching.
-	rightSigs    map[string]Sample
-	matchedSigs  map[string]map[uint64]struct{}
-	resultMetric map[string]labels.Labels
 }

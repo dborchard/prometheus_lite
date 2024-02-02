@@ -47,11 +47,7 @@ func (q *query) Cancel() {
 }
 
 func (q *query) Close() {
-	for _, s := range q.matrix {
-		print(s.Floats)
-		//putFPointSlice(s.Floats)
-		//putHPointSlice(s.Histograms)
-	}
+	q.matrix = nil
 }
 
 func (q *query) Exec(ctx context.Context) *Result {

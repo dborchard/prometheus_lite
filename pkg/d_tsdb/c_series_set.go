@@ -10,15 +10,15 @@ func (b *blockSeriesSet) Next() bool {
 	if b.count == 3 {
 		return false
 	}
+	b.count++
 	return true
 }
 
 func (b *blockSeriesSet) At() storage.Series {
-	b.count++
-	panic("implement me")
+	// At can be looped over before iterating, so save the current values locally.
+	return &blockSeriesEntry{}
 }
 
 func (b *blockSeriesSet) Err() error {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }

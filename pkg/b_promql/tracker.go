@@ -20,3 +20,11 @@ type QueryTracker interface {
 	// Delete removes query from activity tracker. InsertIndex is value returned by Insert call.
 	Delete(insertIndex int)
 }
+
+func (ng *Engine) queueActive(ctx context.Context, q *query) (func(), error) {
+	if ng.activeQueryTracker == nil {
+		return func() {}, nil
+	}
+	queryIndex, err := ng.activeQueryTracker.Insert(ctx, q.q)
+	return func() { ng.activeQueryTracker.Delete(queryIndex) }, err
+}

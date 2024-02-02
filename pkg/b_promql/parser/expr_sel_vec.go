@@ -3,7 +3,7 @@ package parser
 import (
 	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
 	storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
-	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
+	"github.com/dborchard/prometheus_lite/pkg/y_model/labels"
 	"time"
 )
 

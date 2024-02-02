@@ -1,6 +1,9 @@
 package chunkenc
 
-import "github.com/dborchard/prometheus_lite/pkg/z_model/histogram"
+import (
+	"github.com/dborchard/prometheus_lite/pkg/y_model/histogram"
+	"math"
+)
 
 // ValueType defines the type of a value an Iterator points to.
 type ValueType uint8
@@ -46,3 +49,18 @@ type Iterator interface {
 	// iterator is exhausted, i.e. `Next` or `Seek` have returned ValNone.
 	Err() error
 }
+
+// NewNopIterator returns a new chunk iterator that does not hold any data.
+func NewNopIterator() Iterator {
+	return nopIterator{}
+}
+
+type nopIterator struct{}
+
+func (nopIterator) Next() ValueType                                      { return ValNone }
+func (nopIterator) Seek(int64) ValueType                                 { return ValNone }
+func (nopIterator) At() (int64, float64)                                 { return math.MinInt64, 0 }
+func (nopIterator) AtHistogram() (int64, *histogram.Histogram)           { return math.MinInt64, nil }
+func (nopIterator) AtFloatHistogram() (int64, *histogram.FloatHistogram) { return math.MinInt64, nil }
+func (nopIterator) AtT() int64                                           { return math.MinInt64 }
+func (nopIterator) Err() error                                           { return nil }

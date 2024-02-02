@@ -1,8 +1,8 @@
 package labels
 
 import (
-	"slices"
-	"strings"
+	"bytes"
+	"github.com/cespare/xxhash/v2"
 )
 
 const (
@@ -13,6 +13,8 @@ const (
 
 	labelSep = '\xfe'
 )
+
+var seps = []byte{'\xff'}
 
 // Labels is a sorted set of labels. Order has to be guaranteed upon
 // instantiation.
@@ -30,6 +32,27 @@ func (ls Labels) Range(f func(l Label)) {
 	for _, l := range ls {
 		f(l)
 	}
+}
+
+func (ls Labels) HashForLabels(names ...string) uint64 {
+	b := make([]byte, 0, 256)
+	i, j := 0, 0
+	for i < len(ls) && j < len(names) {
+		switch {
+		case names[j] < ls[i].Name:
+			j++
+		case ls[i].Name < names[j]:
+			i++
+		default:
+			b = append(b, ls[i].Name...)
+			b = append(b, seps[0])
+			b = append(b, ls[i].Value...)
+			b = append(b, seps[0])
+			i++
+			j++
+		}
+	}
+	return xxhash.Sum64(b)
 }
 
 // Label is a key/value pair of strings.
@@ -105,26 +128,40 @@ func EmptyLabels() Labels {
 	return Labels{}
 }
 
-// New returns a sorted Labels from the given labels.
-// The caller has to guarantee that all label names are unique.
-func New(ls ...Label) Labels {
-	set := make(Labels, 0, len(ls))
-	set = append(set, ls...)
-	slices.SortFunc(set, func(a, b Label) int { return strings.Compare(a.Name, b.Name) })
-
-	return set
+// BytesWithoutLabels is just as Bytes(), but only for labels not matching names.
+// 'names' have to be sorted in ascending order.
+func (ls Labels) BytesWithoutLabels(buf []byte, names ...string) []byte {
+	b := bytes.NewBuffer(buf[:0])
+	b.WriteByte(labelSep)
+	j := 0
+	for i := range ls {
+		for j < len(names) && names[j] < ls[i].Name {
+			j++
+		}
+		if j < len(names) && ls[i].Name == names[j] {
+			continue
+		}
+		if b.Len() > 1 {
+			b.WriteByte(seps[0])
+		}
+		b.WriteString(ls[i].Name)
+		b.WriteByte(seps[0])
+		b.WriteString(ls[i].Value)
+	}
+	return b.Bytes()
 }
 
-// FromStrings creates new labels from pairs of strings.
-func FromStrings(ss ...string) Labels {
-	if len(ss)%2 != 0 {
-		panic("invalid number of strings")
-	}
-	res := make(Labels, 0, len(ss)/2)
-	for i := 0; i < len(ss); i += 2 {
-		res = append(res, Label{Name: ss[i], Value: ss[i+1]})
-	}
+func (ls Labels) Bytes(buf []byte) []byte {
+	return ls.BytesWithoutLabels(buf, "")
+}
 
-	slices.SortFunc(res, func(a, b Label) int { return strings.Compare(a.Name, b.Name) })
-	return res
+// Get returns the value for the label with the given name.
+// Returns an empty string if the label doesn't exist.
+func (ls Labels) Get(name string) string {
+	for _, l := range ls {
+		if l.Name == name {
+			return l.Value
+		}
+	}
+	return ""
 }

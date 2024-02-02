@@ -2,7 +2,8 @@ package parser
 
 import (
 	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
-	"github.com/dborchard/prometheus_lite/pkg/z_model/labels"
+	"github.com/dborchard/prometheus_lite/pkg/y_model/labels"
+	"github.com/prometheus/common/model"
 )
 
 type Parser interface {
@@ -21,46 +22,46 @@ func NewParser(input string) *parser {
 
 // ParseExpr parses an expression from the input.
 // Right now Mocking 6/3 expr
-func (p *parser) ParseExpr() (Expr, error) {
-	return &BinaryExpr{
-		Op: DIV,
-		LHS: &NumberLiteral{
-			Val:      6,
-			PosRange: posrange.PositionRange{Start: 0, End: 1},
-		},
-		RHS: &NumberLiteral{
-			Val:      3,
-			PosRange: posrange.PositionRange{Start: 4, End: 5},
-		},
-	}, nil
-}
-
 //func (p *parser) ParseExpr() (Expr, error) {
 //	return &BinaryExpr{
 //		Op: DIV,
-//		LHS: &VectorSelector{
-//			Name: "foo",
-//			LabelMatchers: []*labels.Matcher{
-//				MustLabelMatcher(labels.MatchEqual, model.MetricNameLabel, "foo"),
-//			},
-//			PosRange: posrange.PositionRange{
-//				Start: 0,
-//				End:   3,
-//			},
+//		LHS: &NumberLiteral{
+//			Val:      6,
+//			PosRange: posrange.PositionRange{Start: 0, End: 1},
 //		},
-//		RHS: &VectorSelector{
-//			Name: "bar",
-//			LabelMatchers: []*labels.Matcher{
-//				MustLabelMatcher(labels.MatchEqual, model.MetricNameLabel, "bar"),
-//			},
-//			PosRange: posrange.PositionRange{
-//				Start: 6,
-//				End:   9,
-//			},
+//		RHS: &NumberLiteral{
+//			Val:      3,
+//			PosRange: posrange.PositionRange{Start: 4, End: 5},
 //		},
-//		VectorMatching: &VectorMatching{Card: CardOneToOne},
 //	}, nil
 //}
+
+func (p *parser) ParseExpr() (Expr, error) {
+	return &BinaryExpr{
+		Op: DIV,
+		LHS: &VectorSelector{
+			Name: "foo",
+			LabelMatchers: []*labels.Matcher{
+				MustLabelMatcher(labels.MatchEqual, model.MetricNameLabel, "foo"),
+			},
+			PosRange: posrange.PositionRange{
+				Start: 0,
+				End:   3,
+			},
+		},
+		RHS: &VectorSelector{
+			Name: "bar",
+			LabelMatchers: []*labels.Matcher{
+				MustLabelMatcher(labels.MatchEqual, model.MetricNameLabel, "bar"),
+			},
+			PosRange: posrange.PositionRange{
+				Start: 6,
+				End:   9,
+			},
+		},
+		VectorMatching: &VectorMatching{Card: CardOneToOne},
+	}, nil
+}
 
 func (p *parser) Close() {
 }

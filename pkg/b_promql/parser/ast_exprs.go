@@ -38,6 +38,7 @@ type Expr interface {
 var _ Expr = (*NumberLiteral)(nil)
 var _ Expr = (*StringLiteral)(nil)
 var _ Expr = (*StepInvariantExpr)(nil)
+var _ Expr = (*ParenExpr)(nil)
 
 var _ Expr = (*UnaryExpr)(nil)
 var _ Expr = (*BinaryExpr)(nil)
