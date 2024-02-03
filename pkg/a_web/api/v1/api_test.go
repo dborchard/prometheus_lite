@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+// NOTE: we hardcoded parser here:
+// pkg/b_promql/parser/parse.go
 func TestAPI_queryRange(t *testing.T) {
 	api := NewAPI(promql.NewEngine(nil), tsdb.NewDB())
 

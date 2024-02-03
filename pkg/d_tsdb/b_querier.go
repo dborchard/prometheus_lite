@@ -7,6 +7,7 @@ import (
 	"github.com/dborchard/prometheus_lite/pkg/y_model/histogram"
 	"github.com/dborchard/prometheus_lite/pkg/y_model/labels"
 	"github.com/oklog/ulid"
+	"time"
 )
 
 type BlockQuerier struct {
@@ -72,7 +73,8 @@ func (p *populateWithDelSeriesIterator) AtFloatHistogram() (int64, *histogram.Fl
 }
 
 func (p *populateWithDelSeriesIterator) AtT() int64 {
-	return 1
+	// NOTE: this is the place where we send the Vector Output.
+	return time.Now().Unix()
 }
 
 func (p *populateWithDelSeriesIterator) Err() error {
