@@ -7,7 +7,6 @@ import (
 )
 
 type blockSeriesEntry struct {
-	chunks  ChunkReader
 	blockID ulid.ULID
 }
 
