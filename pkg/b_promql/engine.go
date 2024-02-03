@@ -90,6 +90,7 @@ func (ng *Engine) execEvalStmt(ctx context.Context, query *query, s *parser.Eval
 			endTimestamp:   timeMilliseconds(s.Start), // NOTE: single it is instant query, we keep start=end.
 			interval:       1,
 			ctx:            ctxPrepare,
+			maxSamples:     1000,
 		}
 		val, _ := evaluator.Eval(s.Expr)
 
@@ -109,6 +110,7 @@ func (ng *Engine) execEvalStmt(ctx context.Context, query *query, s *parser.Eval
 			endTimestamp:   timeMilliseconds(s.End),
 			interval:       durationMilliseconds(s.Interval),
 			ctx:            ctxPrepare,
+			maxSamples:     1000,
 		}
 		val, _ := evaluator.Eval(s.Expr)
 

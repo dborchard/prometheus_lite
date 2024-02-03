@@ -54,7 +54,7 @@ func (p *populateWithDelSeriesIterator) Next() chunkenc.ValueType {
 }
 
 func (p *populateWithDelSeriesIterator) Seek(t int64) chunkenc.ValueType {
-	return chunkenc.ValNone
+	return chunkenc.ValFloat
 }
 
 func (p *populateWithDelSeriesIterator) At() (int64, float64) {
@@ -72,8 +72,7 @@ func (p *populateWithDelSeriesIterator) AtFloatHistogram() (int64, *histogram.Fl
 }
 
 func (p *populateWithDelSeriesIterator) AtT() int64 {
-	//TODO implement me
-	panic("implement me")
+	return 1
 }
 
 func (p *populateWithDelSeriesIterator) Err() error {

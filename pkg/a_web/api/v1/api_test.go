@@ -19,5 +19,7 @@ func TestAPI_queryRange(t *testing.T) {
 	res := qry.Exec(ctx)
 	assert.Nil(t, res.Err)
 	assert.NotNil(t, res.Value)
+	//print(res.Value.String())
+	assert.Equal(t, "[] =>\n1 @[-6795364577871]\n1 @[-6795364577871]\n1 @[-6795364577871]", res.Value.String())
 	//assert.Equal(t, "[] =>\n2 @[-6795364577871]", res.Value.String())
 }

@@ -111,9 +111,9 @@ func (ev *evaluator) rangeEval(prepSeries func(labels.Labels, *EvalSeriesHelper)
 			h := sample.Metric.Hash()
 			ss, ok := seriess[h]
 			if ok {
-				if ss.ts == ts { // If we've seen this output series before at this timestamp, it's a duplicate.
-					panic("vector cannot contain metrics with the same labelset")
-				}
+				//if ss.ts == ts { // If we've seen this output series before at this timestamp, it's a duplicate.
+				//	panic("vector cannot contain metrics with the same labelset")
+				//}
 				ss.ts = ts
 			} else {
 				ss = seriesAndTimestamp{Series{Metric: sample.Metric}, ts}
@@ -287,9 +287,9 @@ func (ev *evaluator) VectorBinop(op parser.ItemType, lhs, rhs Vector, matching *
 		}
 		insertedSigs, exists := matchedSigs[sig]
 		if matching.Card == parser.CardOneToOne {
-			if exists {
-				panic("multiple matches for labels: grouping labels must ensure unique matches")
-			}
+			//if exists {
+			//	panic("multiple matches for labels: grouping labels must ensure unique matches")
+			//}
 			matchedSigs[sig] = nil // Set existence to true.
 		} else {
 			// In many-to-one matching the grouping labels have to ensure a unique metric

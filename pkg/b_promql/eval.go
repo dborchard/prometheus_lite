@@ -192,15 +192,16 @@ func (ev *evaluator) eval(expr parser.Expr) parser.Value {
 		case lt == parser.ValueTypeVector && rt == parser.ValueTypeVector:
 			// Function to compute the join signature for each series.
 			buf := make([]byte, 0, 1024)
-			sigf := signatureFunc(e.VectorMatching.On, buf, e.VectorMatching.MatchingLabels...)
-			initSignatures := func(series labels.Labels, h *EvalSeriesHelper) {
-				h.signature = sigf(series)
+			sigFn := signatureFunc(e.VectorMatching.On, buf, e.VectorMatching.MatchingLabels...)
+			prepFn := func(series labels.Labels, h *EvalSeriesHelper) {
+				h.signature = sigFn(series)
 			}
 			switch e.Op {
 			default:
-				return ev.rangeEval(initSignatures, func(v []parser.Value, sh [][]EvalSeriesHelper, enh *EvalNodeHelper) Vector {
+				callFn := func(v []parser.Value, sh [][]EvalSeriesHelper, enh *EvalNodeHelper) Vector {
 					return ev.VectorBinop(e.Op, v[0].(Vector), v[1].(Vector), e.VectorMatching, e.ReturnBool, sh[0], sh[1], enh)
-				}, e.LHS, e.RHS)
+				}
+				return ev.rangeEval(prepFn, callFn, e.LHS, e.RHS)
 			}
 
 		case lt == parser.ValueTypeVector && rt == parser.ValueTypeScalar:
@@ -238,7 +239,7 @@ func (ev *evaluator) eval(expr parser.Expr) parser.Value {
 				step++
 				_, f, h, ok := ev.vectorSelectorSingle(it, e, ts)
 				if ok {
-					if ev.currentSamples < ev.maxSamples {
+					if ev.currentSamples <= ev.maxSamples {
 						if h == nil {
 							if ss.Floats == nil {
 								ss.Floats = getFPointSlice(numSteps)

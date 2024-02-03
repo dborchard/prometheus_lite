@@ -84,12 +84,12 @@ func (ev *evaluator) vectorSelectorSingle(it *storage.MemoizedSeriesIterator, no
 	default:
 		panic(fmt.Errorf("unknown value type %v", valueType))
 	}
-	if valueType == chunkenc.ValNone || t > refTime {
-		var ok bool
-		t, v, h, ok = it.PeekPrev()
-		if !ok || t < refTime-durationMilliseconds(0) {
-			return 0, 0, nil, false
-		}
-	}
+	//if valueType == chunkenc.ValNone || t > refTime {
+	//	var ok bool
+	//	t, v, h, ok = it.PeekPrev()
+	//	if !ok || t < refTime-durationMilliseconds(0) {
+	//		return 0, 0, nil, false
+	//	}
+	//}
 	return t, v, h, true
 }

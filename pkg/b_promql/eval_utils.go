@@ -55,6 +55,7 @@ func resultMetric(lhs, rhs labels.Labels, op parser.ItemType, matching *parser.V
 		enh.resultMetric = make(map[string]labels.Labels, len(enh.Out))
 	}
 
+	enh.resetBuilder(lhs)
 	buf := bytes.NewBuffer(enh.lblResultBuf[:0])
 	enh.lblBuf = lhs.Bytes(enh.lblBuf)
 	buf.Write(enh.lblBuf)
@@ -82,6 +83,14 @@ func resultMetric(lhs, rhs labels.Labels, op parser.ItemType, matching *parser.V
 	ret := enh.lb.Labels()
 	enh.resultMetric[str] = ret
 	return ret
+}
+
+func (enh *EvalNodeHelper) resetBuilder(lbls labels.Labels) {
+	if enh.lb == nil {
+		enh.lb = labels.NewBuilder(lbls)
+	} else {
+		enh.lb.Reset(lbls)
+	}
 }
 
 func signatureFunc(on bool, b []byte, names ...string) func(labels.Labels) string {
