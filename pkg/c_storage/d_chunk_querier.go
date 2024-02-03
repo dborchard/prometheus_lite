@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"github.com/dborchard/prometheus_lite/pkg/d_tsdb/chunks"
 	"github.com/dborchard/prometheus_lite/pkg/y_model/labels"
 )
 
@@ -19,10 +18,7 @@ type ChunkQuerier interface {
 // ChunkSeriesSet contains a set of chunked series.
 type ChunkSeriesSet interface {
 	Next() bool
-	// At returns full chunk series. Returned series should be iterable even after Next is called.
-	At() ChunkSeries
-	// The error that iteration has failed with.
-	// When an error occurs, set cannot continue to iterate.
+	At() ChunkSeries // At returns full chunk series. Returned series should be iterable even after Next is called.
 	Err() error
 }
 
@@ -35,5 +31,5 @@ type ChunkSeries interface {
 type ChunkIterable interface {
 	// Iterator returns an iterator that iterates over potentially overlapping
 	// chunks of the series, sorted by min time.
-	Iterator(chunks.Iterator) chunks.Iterator
+	//Iterator(chunks.Iterator) chunks.Iterator
 }

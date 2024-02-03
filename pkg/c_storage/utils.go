@@ -18,21 +18,3 @@ type SelectHints struct {
 	// may be improved.
 	DisableTrimming bool
 }
-
-// Matcher models the matching of a label.
-type Matcher struct {
-	Type  MatchType
-	Name  string
-	Value string
-}
-
-// MatchType is an enum for label matching types.
-type MatchType int
-
-// Possible MatchTypes.
-const (
-	MatchEqual MatchType = iota
-	MatchNotEqual
-	MatchRegexp
-	MatchNotRegexp
-)
