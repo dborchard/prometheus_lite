@@ -1,8 +1,6 @@
 package parser
 
-import (
-	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
-)
+import "github.com/dborchard/prometheus_lite/pkg/b_parser/posrange"
 
 type Node interface {
 	// String representation of the node that returns the given node when parsed

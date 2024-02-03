@@ -1,6 +1,6 @@
 package parser
 
-import "github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
+import "github.com/dborchard/prometheus_lite/pkg/b_parser/posrange"
 
 // AggregateExpr represents an aggregation operation on a Vector.
 type AggregateExpr struct {

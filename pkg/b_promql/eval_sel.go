@@ -3,13 +3,13 @@ package promql
 import (
 	"context"
 	"fmt"
-	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
+	parser "github.com/dborchard/prometheus_lite/pkg/b_parser"
 	storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
 	"github.com/dborchard/prometheus_lite/pkg/d_tsdb/chunkenc"
 	"github.com/dborchard/prometheus_lite/pkg/y_model/histogram"
 )
 
-// matrixSelector evaluates a *parser.MatrixSelector expression.
+// matrixSelector evaluates a *b_parser.MatrixSelector expression.
 func (ev *evaluator) matrixSelector(node *parser.MatrixSelector) Matrix {
 	var (
 		vs = node.VectorSelector.(*parser.VectorSelector)

@@ -1,6 +1,6 @@
 package parser
 
-import "github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
+import "github.com/dborchard/prometheus_lite/pkg/b_parser/posrange"
 
 // ParenExpr wraps an expression so it cannot be disassembled as a consequence
 // of operator precedence.

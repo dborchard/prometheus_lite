@@ -1,6 +1,6 @@
 package parser
 
-import "github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
+import "github.com/dborchard/prometheus_lite/pkg/b_parser/posrange"
 
 // NumberLiteral represents a number.
 type NumberLiteral struct {

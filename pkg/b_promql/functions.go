@@ -1,7 +1,7 @@
 package promql
 
 import (
-	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
+	parser "github.com/dborchard/prometheus_lite/pkg/b_parser"
 	"github.com/dborchard/prometheus_lite/pkg/y_model/labels"
 	"math"
 )
@@ -13,7 +13,7 @@ var FunctionCalls = map[string]FunctionCall{
 	"abs": funcAbs,
 }
 
-// === abs(Vector parser.ValueTypeVector) (Vector, Annotations) ===
+// === abs(Vector b_parser.ValueTypeVector) (Vector, Annotations) ===
 func funcAbs(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper) Vector {
 	return simpleFunc(vals, enh, math.Abs)
 }

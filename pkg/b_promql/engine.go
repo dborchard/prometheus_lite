@@ -3,7 +3,7 @@ package promql
 import (
 	"context"
 	"fmt"
-	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser"
+	parser "github.com/dborchard/prometheus_lite/pkg/b_parser"
 	storage "github.com/dborchard/prometheus_lite/pkg/c_storage"
 	"sort"
 	"sync"

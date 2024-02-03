@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/dborchard/prometheus_lite/pkg/b_promql/parser/posrange"
+	"github.com/dborchard/prometheus_lite/pkg/b_parser/posrange"
 	"github.com/dborchard/prometheus_lite/pkg/y_model/labels"
 	"github.com/prometheus/common/model"
 )
@@ -38,7 +38,7 @@ func NewParser(input string) *parser {
 
 func (p *parser) ParseExpr() (Expr, error) {
 	return &BinaryExpr{
-		Op: DIV,
+		Op: ADD,
 		LHS: &VectorSelector{
 			Name: "foo",
 			LabelMatchers: []*labels.Matcher{

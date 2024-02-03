@@ -59,6 +59,7 @@ func (p *populateWithDelSeriesIterator) Seek(t int64) chunkenc.ValueType {
 }
 
 func (p *populateWithDelSeriesIterator) At() (int64, float64) {
+	// NOTE: this the entry point for storage.
 	return 0, float64(p.count)
 }
 

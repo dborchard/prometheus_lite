@@ -20,7 +20,7 @@ My overall opinion:
 
 #### Core Features
 
-- [ ] Custom Parser, may be a start point for tiny parser.
+- [ ] Custom Parse (good starting point for tiny parser)
 - [x] PromQL using AST
 - [ ] Storage Adapter Layer + Fanout
 - [ ] TSDB
